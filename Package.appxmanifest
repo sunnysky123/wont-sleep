@@ -2,23 +2,19 @@
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
-  IgnorableNamespaces="uap uap10 rescap systemai">
+  IgnorableNamespaces="uap uap10 rescap">
 
   <Identity
-    Name="f5026ba0-ad19-4dad-909f-1dbecb04cd06"
-    Publisher="CN=sunny"
+    Name="27506sunnysky.wontsleep"
+    Publisher="CN=F63F72CB-11CF-4649-86D2-C66971E4FB29"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="f5026ba0-ad19-4dad-909f-1dbecb04cd06" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
   <Properties>
-    <DisplayName>wont-sleep</DisplayName>
-    <PublisherDisplayName>sunny</PublisherDisplayName>
+    <DisplayName>wont sleep</DisplayName>
+    <PublisherDisplayName>sunnysky</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on"/>
@@ -39,8 +35,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="wont-sleep"
-        Description="wont-sleep"
+        DisplayName="wont sleep"
+        Description="wont sleep"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
@@ -52,6 +48,5 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <systemai:Capability Name="systemAIModels"/>
   </Capabilities>
 </Package>
