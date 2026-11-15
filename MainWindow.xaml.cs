@@ -90,18 +90,24 @@ namespace wont_sleep
 
         private void ShowFromTray()
         {
-            if (!AppWindow.IsVisible)
-            {
-                AppWindow.Show();
-            }
-
-            Activate();
+            BringToFront();
 
             if (_trayHintPending)
             {
                 _trayHintPending = false;
                 _mainPage?.ShowTrayHint();
             }
+        }
+
+        /// <summary>把窗口带到前台（托盘点击或第二个实例激活时调用）。</summary>
+        internal void BringToFront()
+        {
+            if (!AppWindow.IsVisible)
+            {
+                AppWindow.Show();
+            }
+
+            Activate();
         }
 
         private void ExitApplication()
