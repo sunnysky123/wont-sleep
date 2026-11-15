@@ -12,7 +12,7 @@ namespace wont_sleep.Services;
 /// 这里直接用 <see cref="MicaController"/> 并通过 <see cref="SystemBackdropConfiguration.Theme"/> 指定主题。
 /// </para>
 /// </summary>
-internal sealed class ThemedMicaBackdrop : SystemBackdrop
+internal sealed partial class ThemedMicaBackdrop : SystemBackdrop
 {
     private MicaController? _controller;
     private SystemBackdropConfiguration? _configuration;
