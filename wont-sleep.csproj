@@ -26,6 +26,8 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\AppIcon.ico" />
     <Content Include="Assets\AppIconIdle.ico" />
+    <!-- Assets\source 只存放图标生成脚本与母版图片，不参与 MSIX 打包 -->
+    <Content Remove="Assets\source\**" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
 
@@ -67,9 +69,17 @@
 
   <!-- Publish Properties -->
   <PropertyGroup>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+
+    <!--
+      Native AOT 默认关闭，按需开启：
+        dotnet publish -c Release -p:PublishAot=true
+      开启后需要 MSVC 链接器与 Windows SDK（Visual Studio「使用 C++ 的桌面开发」工作负载）。
+      默认关闭可保证在未安装 C++ 工具链的机器上也能正常生成 MSIX / EXE。
+    -->
+    <PublishReadyToRun Condition="'$(PublishAot)' == 'true'">False</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(PublishReadyToRun)' == '' and '$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(PublishReadyToRun)' == ''">False</PublishReadyToRun>
   </PropertyGroup>
 </Project>

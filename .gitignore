@@ -30,6 +30,11 @@ packages/
 *.nupkg
 *.snupkg
 
+## 签名证书（本地测试用，切勿入库）
+*.pfx
+*.cer
+*.pvk
+
 ## 操作系统
 Thumbs.db
 desktop.ini

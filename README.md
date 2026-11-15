@@ -49,6 +49,84 @@ dotnet run --project wont-sleep.csproj -p:Platform=x64
 
 > 首次运行前若图标或资源未生效，请重新部署一次（MSIX 布局是按部署步骤生成的）。
 
+### 打包为 MSIX（推荐）
+
+本项目是单项目 MSIX 应用，Release 构建可直接产出安装包：
+
+```powershell
+dotnet build wont-sleep.csproj -c Release -p:Platform=x64 `
+  -p:GenerateAppxPackageOnBuild=true `
+  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" `
+  -p:PackageCertificatePassword="wontsleep"
+```
+
+产物位于 `AppPackages\wont-sleep_1.0.0.0_Test\`：
+
+| 文件 | 说明 |
+| --- | --- |
+| `wont-sleep_1.0.0.0_x64.msix` | 应用包（已签名） |
+| `wont-sleep_1.0.0.0_x64.msixbundle` | 多架构捆绑包 |
+| `wont-sleep_1.0.0.0_x64.cer` | 测试证书 |
+| `Install.ps1` / `Add-AppDevPackage.ps1` | 一键安装脚本（自动信任证书并安装依赖） |
+| `Dependencies\` | Windows App Runtime 依赖包 |
+
+**安装**：右键 `Install.ps1` →「使用 PowerShell 运行」，按提示允许管理员权限即可。
+
+**本地测试证书**（未入库）如不存在，先生成一次（`Subject` 必须与清单 `Identity Publisher="CN=sunny"` 完全一致）：
+
+```powershell
+$pwd = ConvertTo-SecureString -String "wontsleep" -Force -AsPlainText
+$cert = New-SelfSignedCertificate -Type Custom -Subject "CN=sunny" -KeyUsage DigitalSignature `
+  -FriendlyName "wont-sleep 本地测试证书" -CertStoreLocation "Cert:\CurrentUser\My" `
+  -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3","2.5.29.19={text}")
+Export-PfxCertificate -Cert $cert -FilePath "Properties\wont-sleep_TemporaryKey.pfx" -Password $pwd
+Export-Certificate -Cert $cert -FilePath "Properties\wont-sleep_TemporaryKey.cer"
+```
+
+> `.pfx` / `.cer` 已在 `.gitignore` 中排除，请勿把签名私钥提交到仓库；面向正式分发应改用受信任的代码签名证书。
+>
+> 只验证打包流程、不签名：追加 `-p:AppxPackageSigningEnabled=false`（产物无法直接安装）。
+
+#### 多架构打包
+
+每次打包都会先清空默认的输出目录，因此连续打多个架构会互相覆盖，需要用 `AppxPackageDir` 分目录：
+
+```powershell
+# x64
+dotnet build wont-sleep.csproj -c Release -p:Platform=x64 -p:AppxPackageDir="AppPackages\x64\" `
+  -p:GenerateAppxPackageOnBuild=true `
+  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" -p:PackageCertificatePassword="wontsleep"
+
+# ARM64（x64 主机上交叉编译即可）
+dotnet build wont-sleep.csproj -c Release -p:Platform=ARM64 -p:RuntimeIdentifier=win-arm64 `
+  -p:AppxPackageDir="AppPackages\arm64\" `
+  -p:GenerateAppxPackageOnBuild=true `
+  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" -p:PackageCertificatePassword="wontsleep"
+```
+
+把两个单架构 `.msix` 合并成一个多架构 bundle（上传商店只需一个文件）：
+
+```powershell
+$mk = "$env:USERPROFILE\.nuget\packages\microsoft.windows.sdk.buildtools\10.0.28000.2957\bin\10.0.28000.0\x64\makeappx.exe"
+& $mk bundle /d <存放两个 .msix 的目录> /p AppPackages\wont-sleep.msixbundle /o
+```
+
+### Native AOT 发布（可选）
+
+AOT 默认关闭，保证未安装 C++ 工具链的机器也能正常构建与打包；需要时显式开启：
+
+```powershell
+dotnet publish wont-sleep.csproj -c Release -p:Platform=x64 -p:PublishAot=true
+```
+
+前置条件：需要 **MSVC 链接器 + Windows SDK**（Visual Studio Installer 中安装「使用 C++ 的桌面开发」工作负载）。缺失时会报：
+
+```
+error : Platform linker not found. Ensure you have all the required prerequisites ...
+```
+
+> 若 Visual Studio 是 **Insiders / 预览版**，SDK 自带的 `findvcvarsall.bat` 可能找不到 C++ 组件（`vswhere` 未注册该组件 ID），从而报同样的链接器错误。此时可在「x64 Native Tools 命令提示符」里执行，并额外传 `-p:IlcUseEnvironmentalTools=true`，让链接器直接从环境变量 `PATH` / `LIB` 获取。
+
 ---
 
 ## 使用说明
