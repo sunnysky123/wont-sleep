@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="PageTitle.Text" xml:space="preserve">
+    <value>阻止系统休眠</value>
+  </data>
+  <data name="PageSubtitle.Text" xml:space="preserve">
+    <value>运行重要任务时保持系统唤醒，避免因空闲而自动进入睡眠。</value>
+  </data>
+
+  <data name="PreventSleepToggle.Header" xml:space="preserve">
+    <value>阻止系统休眠</value>
+  </data>
+  <data name="PreventSleepToggle.OnContent" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="PreventSleepToggle.OffContent" xml:space="preserve">
+    <value>已关闭</value>
+  </data>
+  <data name="KeepDisplayCheckBox.Content" xml:space="preserve">
+    <value>同时保持屏幕常亮（否则仅阻止系统睡眠，屏幕仍可关闭）</value>
+  </data>
+
+  <data name="DurationComboBox.Header" xml:space="preserve">
+    <value>持续时长</value>
+  </data>
+  <data name="ModeComboBox.Header" xml:space="preserve">
+    <value>阻止方式</value>
+  </data>
+  <data name="ModePowerRequestItem.Content" xml:space="preserve">
+    <value>电源请求（PowerRequest，推荐）</value>
+  </data>
+  <data name="ModeThreadStateItem.Content" xml:space="preserve">
+    <value>线程执行状态（SetThreadExecutionState）</value>
+  </data>
+
+  <data name="AppearanceTitle.Text" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="ThemeSystemItem.Content" xml:space="preserve">
+    <value>跟随系统</value>
+  </data>
+  <data name="ThemeLightItem.Content" xml:space="preserve">
+    <value>浅色</value>
+  </data>
+  <data name="ThemeDarkItem.Content" xml:space="preserve">
+    <value>深色</value>
+  </data>
+
+  <data name="FooterNote.Text" xml:space="preserve">
+    <value>关闭窗口后应用会最小化到通知区域继续运行，右键托盘图标可显示窗口或退出。退出应用、注销或重启系统后会恢复默认电源策略。</value>
+  </data>
+
+  <data name="StatusInactive" xml:space="preserve">
+    <value>未启用</value>
+  </data>
+  <data name="StatusActive" xml:space="preserve">
+    <value>已阻止系统休眠</value>
+  </data>
+  <data name="StatusActiveDisplay" xml:space="preserve">
+    <value>已阻止系统休眠 · 屏幕常亮</value>
+  </data>
+  <data name="StatusElapsedFormat" xml:space="preserve">
+    <value>已运行 {0}</value>
+  </data>
+  <data name="StatusElapsedRemainingFormat" xml:space="preserve">
+    <value>已运行 {0} · 剩余 {1}</value>
+  </data>
+
+  <data name="TrayTipInactive" xml:space="preserve">
+    <value>wont-sleep — 未启用</value>
+  </data>
+  <data name="TrayTipActive" xml:space="preserve">
+    <value>wont-sleep — 正在阻止休眠</value>
+  </data>
+  <data name="TrayTipActiveDisplay" xml:space="preserve">
+    <value>wont-sleep — 正在阻止休眠（屏幕常亮）</value>
+  </data>
+  <data name="TrayTipUnlimitedFormat" xml:space="preserve">
+    <value>{0} · 不限时</value>
+  </data>
+  <data name="TrayTipEndsAtFormat" xml:space="preserve">
+    <value>{0} · 结束时间 {1}</value>
+  </data>
+
+  <data name="ModeDescriptionPowerRequest" xml:space="preserve">
+    <value>通过电源请求对象（PowerCreateRequest / PowerSetRequest）持有请求：可按类型分别控制系统与屏幕，与线程无关，句柄关闭即失效。</value>
+  </data>
+  <data name="ModeDescriptionThreadState" xml:space="preserve">
+    <value>通过专用后台线程调用 SetThreadExecutionState 持有请求：兼容性最好，但状态绑定在该线程的生命周期上。</value>
+  </data>
+
+  <data name="ErrorKeepDisplayFailedFormat" xml:space="preserve">
+    <value>更新屏幕常亮设置失败：{0}</value>
+  </data>
+  <data name="ErrorSwitchModeFailedFormat" xml:space="preserve">
+    <value>切换阻止方式失败：{0}</value>
+  </data>
+  <data name="ErrorStartFailedFormat" xml:space="preserve">
+    <value>无法阻止系统休眠：{0}</value>
+  </data>
+  <data name="MessageTimerFinished" xml:space="preserve">
+    <value>计时已结束，系统已恢复默认电源策略。</value>
+  </data>
+  <data name="MessageStoppedFromTray" xml:space="preserve">
+    <value>已从托盘停止阻止休眠，系统已恢复默认电源策略。</value>
+  </data>
+  <data name="MessageTrayHint" xml:space="preserve">
+    <value>应用已最小化到通知区域，仍在后台运行。右键托盘图标可显示窗口或退出。</value>
+  </data>
+
+  <data name="DurationUnlimited" xml:space="preserve">
+    <value>不限时</value>
+  </data>
+  <data name="DurationHoursFormat" xml:space="preserve">
+    <value>{0} 小时</value>
+  </data>
+
+  <data name="TrayShowWindow" xml:space="preserve">
+    <value>显示主窗口</value>
+  </data>
+  <data name="TrayPreventSleep" xml:space="preserve">
+    <value>阻止休眠</value>
+  </data>
+  <data name="TrayStop" xml:space="preserve">
+    <value>停止工作</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+</root>

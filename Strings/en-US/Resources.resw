@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="PageTitle.Text" xml:space="preserve">
+    <value>Prevent system sleep</value>
+  </data>
+  <data name="PageSubtitle.Text" xml:space="preserve">
+    <value>Keep this PC awake while long-running tasks are in progress, so it won't fall asleep while idle.</value>
+  </data>
+
+  <data name="PreventSleepToggle.Header" xml:space="preserve">
+    <value>Prevent system sleep</value>
+  </data>
+  <data name="PreventSleepToggle.OnContent" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="PreventSleepToggle.OffContent" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="KeepDisplayCheckBox.Content" xml:space="preserve">
+    <value>Also keep the display on (otherwise only system sleep is blocked and the display may still turn off)</value>
+  </data>
+
+  <data name="DurationComboBox.Header" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="ModeComboBox.Header" xml:space="preserve">
+    <value>Method</value>
+  </data>
+  <data name="ModePowerRequestItem.Content" xml:space="preserve">
+    <value>Power request (PowerRequest, recommended)</value>
+  </data>
+  <data name="ModeThreadStateItem.Content" xml:space="preserve">
+    <value>Thread execution state (SetThreadExecutionState)</value>
+  </data>
+
+  <data name="AppearanceTitle.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="ThemeSystemItem.Content" xml:space="preserve">
+    <value>Follow system</value>
+  </data>
+  <data name="ThemeLightItem.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ThemeDarkItem.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+
+  <data name="FooterNote.Text" xml:space="preserve">
+    <value>Closing the window minimizes the app to the notification area, where it keeps running. Right-click the tray icon to show the window or exit. Exiting the app, signing out, or restarting restores the default power policy.</value>
+  </data>
+
+  <data name="StatusInactive" xml:space="preserve">
+    <value>Not running</value>
+  </data>
+  <data name="StatusActive" xml:space="preserve">
+    <value>Preventing system sleep</value>
+  </data>
+  <data name="StatusActiveDisplay" xml:space="preserve">
+    <value>Preventing system sleep · display on</value>
+  </data>
+  <data name="StatusElapsedFormat" xml:space="preserve">
+    <value>Running {0}</value>
+  </data>
+  <data name="StatusElapsedRemainingFormat" xml:space="preserve">
+    <value>Running {0} · {1} left</value>
+  </data>
+
+  <data name="TrayTipInactive" xml:space="preserve">
+    <value>wont-sleep — Not running</value>
+  </data>
+  <data name="TrayTipActive" xml:space="preserve">
+    <value>wont-sleep — Preventing sleep</value>
+  </data>
+  <data name="TrayTipActiveDisplay" xml:space="preserve">
+    <value>wont-sleep — Preventing sleep (display on)</value>
+  </data>
+  <data name="TrayTipUnlimitedFormat" xml:space="preserve">
+    <value>{0} · no time limit</value>
+  </data>
+  <data name="TrayTipEndsAtFormat" xml:space="preserve">
+    <value>{0} · ends at {1}</value>
+  </data>
+
+  <data name="ModeDescriptionPowerRequest" xml:space="preserve">
+    <value>Holds a power request (PowerCreateRequest / PowerSetRequest) that blocks system sleep and display sleep independently. It is not tied to a thread and is released when the handle is closed.</value>
+  </data>
+  <data name="ModeDescriptionThreadState" xml:space="preserve">
+    <value>Calls SetThreadExecutionState from a dedicated background thread. Best compatibility, but the request lives as long as that thread.</value>
+  </data>
+
+  <data name="ErrorKeepDisplayFailedFormat" xml:space="preserve">
+    <value>Failed to update the display setting: {0}</value>
+  </data>
+  <data name="ErrorSwitchModeFailedFormat" xml:space="preserve">
+    <value>Failed to switch method: {0}</value>
+  </data>
+  <data name="ErrorStartFailedFormat" xml:space="preserve">
+    <value>Unable to prevent system sleep: {0}</value>
+  </data>
+  <data name="MessageTimerFinished" xml:space="preserve">
+    <value>The timer finished and the default power policy has been restored.</value>
+  </data>
+  <data name="MessageStoppedFromTray" xml:space="preserve">
+    <value>Sleep prevention was stopped from the tray and the default power policy has been restored.</value>
+  </data>
+  <data name="MessageTrayHint" xml:space="preserve">
+    <value>The app is minimized to the notification area and still running in the background. Right-click the tray icon to show the window or exit.</value>
+  </data>
+
+  <data name="DurationUnlimited" xml:space="preserve">
+    <value>No limit</value>
+  </data>
+  <data name="DurationHoursFormat" xml:space="preserve">
+    <value>{0} h</value>
+  </data>
+
+  <data name="TrayShowWindow" xml:space="preserve">
+    <value>Show window</value>
+  </data>
+  <data name="TrayPreventSleep" xml:space="preserve">
+    <value>Prevent sleep</value>
+  </data>
+  <data name="TrayStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+</root>

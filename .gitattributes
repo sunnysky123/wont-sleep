@@ -1,0 +1,18 @@
+# 统一换行符，避免 Windows 上产生的 CRLF 噪音
+* text=auto
+
+# 源码与文档按文本处理
+*.cs       text diff=csharp
+*.xaml     text
+*.resw     text
+*.csproj   text
+*.slnx     text
+*.manifest text
+*.md       text
+*.ps1      text
+*.json     text
+
+# 二进制资源不要做换行符转换与文本 diff
+*.png      binary
+*.ico      binary
+*.pri      binary

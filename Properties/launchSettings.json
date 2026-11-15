@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "wont-sleep (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "wont-sleep (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
