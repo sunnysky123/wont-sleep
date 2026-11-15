@@ -10,7 +10,7 @@
   <Identity
     Name="27506sunnysky.wontsleep"
     Publisher="CN=F63F72CB-11CF-4649-86D2-C66971E4FB29"
-    Version="1.0.1.1" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>wont sleep</DisplayName>
