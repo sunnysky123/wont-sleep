@@ -156,4 +156,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File Assets\source\generate-icon.
 
 ## 许可证
 
-本项目尚未声明开源许可证，如需公开请自行补充 `LICENSE` 文件。
+本项目基于 [MIT License](LICENSE) 开源，Copyright (c) 2026 sunnysky123。
