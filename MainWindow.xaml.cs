@@ -28,7 +28,15 @@ namespace wont_sleep
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
-            AppWindow.SetIcon("Assets/AppIcon.ico");
+            try
+            {
+                AppWindow.SetIcon("Assets/AppIcon.ico");
+            }
+            catch (Exception)
+            {
+                // 图标资源缺失时不应阻止应用启动。
+            }
+
             AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(820, 820));
 
             // 主题需要在页面创建前应用，避免启动时先闪一下系统主题。
@@ -88,16 +96,7 @@ namespace wont_sleep
             _trayIcon.Dispose();
         }
 
-        private void ShowFromTray()
-        {
-            BringToFront();
-
-            if (_trayHintPending)
-            {
-                _trayHintPending = false;
-                _mainPage?.ShowTrayHint();
-            }
-        }
+        private void ShowFromTray() => BringToFront();
 
         /// <summary>把窗口带到前台（托盘点击或第二个实例激活时调用）。</summary>
         internal void BringToFront()
@@ -106,8 +105,19 @@ namespace wont_sleep
             {
                 AppWindow.Show();
             }
+            else if (AppWindow.Presenter is OverlappedPresenter { State: OverlappedPresenterState.Minimized } presenter)
+            {
+                // 仅点任务栏让窗口闪烁不足以恢复最小化窗口，需要显式还原。
+                presenter.Restore();
+            }
 
             Activate();
+
+            if (_trayHintPending)
+            {
+                _trayHintPending = false;
+                _mainPage?.ShowTrayHint();
+            }
         }
 
         private void ExitApplication()

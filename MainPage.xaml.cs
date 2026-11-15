@@ -98,7 +98,7 @@ namespace wont_sleep
 
             if (PreventSleepToggle.IsOn)
             {
-                // 已在工作中：切换时长会同步更新结束时间。
+                // 已在工作中：切换时长会同步更新结束时间（保留已运行时长）。
                 UpdateStatusDisplay();
                 return;
             }
@@ -110,7 +110,8 @@ namespace wont_sleep
         /// <summary>托盘菜单选择「停止工作」。</summary>
         internal void StopWork()
         {
-            if (!_uiReady)
+            // 未在运行时不必处理，避免弹出「已停止」的误导提示。
+            if (!_uiReady || !_inhibitor.IsActive)
             {
                 return;
             }
@@ -164,6 +165,11 @@ namespace wont_sleep
             }
             catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
             {
+                // Start 内部会先停止旧请求，失败后请求已经失效，
+                // 必须把界面回退到「未启用」，否则会显示正在阻止休眠但实际没有。
+                _ticker.Stop();
+                SetToggleWithoutRaisingEvents(false);
+                UpdateStatusDisplay();
                 ShowMessage(InfoBarSeverity.Error, Strings.Format("ErrorKeepDisplayFailedFormat", ex.Message));
             }
         }
