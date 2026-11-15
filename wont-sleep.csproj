@@ -12,6 +12,12 @@
     <UseWinUI>true</UseWinUI>
     <WinUISDKReferences>false</WinUISDKReferences>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <!--
+      不要把语言资源拆成独立的 .msix 资源包：
+      默认值为 Language|Scale|DXFeatureLevel，会把 zh-CN 拆出去，
+      而我们提交的 bundle 只包含主包，中文系统就会因缺少资源包而回退到英文界面。
+    -->
+    <AppxBundleAutoResourcePackageQualifiers>Scale|DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

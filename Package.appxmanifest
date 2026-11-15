@@ -26,8 +26,15 @@
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
   </Dependencies>
 
+  <!--
+    显式声明支持的语言，不要使用 x-generate：
+    打包步骤会依据这里的语言列表裁剪 resources.pri，x-generate 在打包场景下
+    只会生成默认语言（en-US），导致中文资源被整体丢弃、中文系统回退到英文界面。
+    顺序：默认语言（en-US）在前，其余随后。
+  -->
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="en-US"/>
+    <Resource Language="zh-CN"/>
   </Resources>
 
   <Applications>
