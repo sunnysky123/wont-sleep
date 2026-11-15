@@ -28,6 +28,16 @@
 
 ---
 
+## 安装
+
+推荐通过微软商店安装，自动获取更新：
+
+[![下载自微软商店](https://img.shields.io/badge/%E5%BE%AE%E8%BD%AF%E5%95%86%E5%BA%97-%E4%B8%8B%E8%BD%BD-0078D4?logo=microsoft)](https://apps.microsoft.com/detail/9NMZ86XJV794?hl=zh-cn&gl=CN&ocid=pdpshare)
+
+也可以从构建产物手动安装 MSIX 包，见下文 [打包为 MSIX](#打包为-msix推荐)。
+
+---
+
 ## 运行要求
 
 | 项目 | 要求 |
