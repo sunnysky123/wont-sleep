@@ -99,6 +99,13 @@
     <PublishReadyToRun Condition="'$(PublishAot)' == 'true'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == '' and '$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == ''">False</PublishReadyToRun>
+
+    <!--
+      默认不签名：微软商店入库时会重新签名，本地签名对上传没有意义。
+      需要本地旁加载安装时，命令行覆盖即可：
+        -p:AppxPackageSigningEnabled=true -p:PackageCertificateKeyFile=<pfx> -p:PackageCertificatePassword=<pwd>
+    -->
+    <AppxPackageSigningEnabled Condition="'$(AppxPackageSigningEnabled)' == ''">false</AppxPackageSigningEnabled>
   </PropertyGroup>
 
   <!--

@@ -68,41 +68,30 @@ dotnet run --project wont-sleep.csproj -p:Platform=x64
 
 ### 打包为 MSIX（推荐）
 
-本项目是单项目 MSIX 应用，Release 构建可直接产出安装包：
+本项目是单项目 MSIX 应用，Release 构建可直接产出安装包。项目默认**不签名**（`AppxPackageSigningEnabled=false`）：微软商店入库时会重新签名，本地签名对上传没有意义。
 
 ```powershell
 dotnet build wont-sleep.csproj -c Release -p:Platform=x64 `
-  -p:GenerateAppxPackageOnBuild=true `
-  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" `
-  -p:PackageCertificatePassword="wontsleep"
+  -p:GenerateAppxPackageOnBuild=true
 ```
 
-产物位于 `AppPackages\wont-sleep_1.0.0.0_Test\`：
+产物位于 `AppPackages\wont-sleep_1.0.3.0_x64_Test\`：
 
 | 文件 | 说明 |
 | --- | --- |
-| `wont-sleep_1.0.0.0_x64.msix` | 应用包（已签名） |
-| `wont-sleep_1.0.0.0_x64.msixbundle` | 多架构捆绑包 |
-| `wont-sleep_1.0.0.0_x64.cer` | 测试证书 |
-| `Install.ps1` / `Add-AppDevPackage.ps1` | 一键安装脚本（自动信任证书并安装依赖） |
+| `wont-sleep_1.0.3.0_x64.msix` | 应用包（未签名，用于上传商店） |
+| `Install.ps1` / `Add-AppDevPackage.ps1` | 安装脚本（未签名包无法直接安装） |
 | `Dependencies\` | Windows App Runtime 依赖包 |
 
-**安装**：右键 `Install.ps1` →「使用 PowerShell 运行」，按提示允许管理员权限即可。
-
-**本地测试证书**（未入库）如不存在，先生成一次（`Subject` 必须与清单 `Identity Publisher="CN=sunny"` 完全一致）：
-
-```powershell
-$pwd = ConvertTo-SecureString -String "wontsleep" -Force -AsPlainText
-$cert = New-SelfSignedCertificate -Type Custom -Subject "CN=sunny" -KeyUsage DigitalSignature `
-  -FriendlyName "wont-sleep 本地测试证书" -CertStoreLocation "Cert:\CurrentUser\My" `
-  -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3","2.5.29.19={text}")
-Export-PfxCertificate -Cert $cert -FilePath "Properties\wont-sleep_TemporaryKey.pfx" -Password $pwd
-Export-Certificate -Cert $cert -FilePath "Properties\wont-sleep_TemporaryKey.cer"
-```
-
-> `.pfx` / `.cer` 已在 `.gitignore` 中排除，请勿把签名私钥提交到仓库；面向正式分发应改用受信任的代码签名证书。
+> 未签名包不能旁加载安装。需要在本地安装时，临时开启签名并指定证书（证书 `Subject` 必须与清单 `Identity Publisher` 完全一致）：
 >
-> 只验证打包流程、不签名：追加 `-p:AppxPackageSigningEnabled=false`（产物无法直接安装）。
+> ```powershell
+> dotnet build wont-sleep.csproj -c Release -p:Platform=x64 -p:GenerateAppxPackageOnBuild=true `
+>   -p:AppxPackageSigningEnabled=true `
+>   -p:PackageCertificateKeyFile="<pfx 路径>" -p:PackageCertificatePassword="<密码>"
+> ```
+>
+> `.pfx` / `.cer` 已在 `.gitignore` 中排除，请勿把签名私钥提交到仓库。
 
 #### 多架构打包
 
@@ -111,21 +100,19 @@ Export-Certificate -Cert $cert -FilePath "Properties\wont-sleep_TemporaryKey.cer
 ```powershell
 # x64
 dotnet build wont-sleep.csproj -c Release -p:Platform=x64 -p:AppxPackageDir="AppPackages\x64\" `
-  -p:GenerateAppxPackageOnBuild=true `
-  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" -p:PackageCertificatePassword="wontsleep"
+  -p:GenerateAppxPackageOnBuild=true
 
 # ARM64（x64 主机上交叉编译即可）
 dotnet build wont-sleep.csproj -c Release -p:Platform=ARM64 -p:RuntimeIdentifier=win-arm64 `
   -p:AppxPackageDir="AppPackages\arm64\" `
-  -p:GenerateAppxPackageOnBuild=true `
-  -p:PackageCertificateKeyFile="Properties\wont-sleep_TemporaryKey.pfx" -p:PackageCertificatePassword="wontsleep"
+  -p:GenerateAppxPackageOnBuild=true
 ```
 
-把两个单架构 `.msix` 合并成一个多架构 bundle（上传商店只需一个文件）：
+把两个单架构 `.msix` 合并成一个多架构 bundle（上传商店只需一个文件，保持未签名）：
 
 ```powershell
 $mk = "$env:USERPROFILE\.nuget\packages\microsoft.windows.sdk.buildtools\10.0.28000.2957\bin\10.0.28000.0\x64\makeappx.exe"
-& $mk bundle /d <存放两个 .msix 的目录> /p AppPackages\wont-sleep.msixbundle /o
+& $mk bundle /d <存放两个 .msix 的目录> /p AppPackages\wont-sleep_1.0.3.0.msixbundle /o
 ```
 
 ### Native AOT 发布（可选）
