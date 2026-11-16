@@ -58,9 +58,21 @@
     Set <EnableWinAppRunSupport>false</EnableWinAppRunSupport> in a
     <PropertyGroup> above to opt out.
   -->
+  <!--
+    只引用实际用到的 Windows App SDK 组件，而不是聚合包 Microsoft.WindowsAppSDK。
+    聚合包会连带引入 AI / ML / Search / Widgets，其中 ML 会把 onnxruntime.dll（约 22 MB）
+    和 DirectML.dll（约 18 MB）复制进安装包，而本应用完全不使用这些能力。
+    组件清单与聚合包 2.6.5 保持一致，仅去掉 AI / ML / Search / Widgets。
+    升级 SDK 版本时这些版本号需要一起改。
+  -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.6.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.8.0" />
   </ItemGroup>
 
@@ -88,4 +100,25 @@
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == '' and '$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == ''">False</PublishReadyToRun>
   </PropertyGroup>
+
+  <!--
+    .NET 运行时包会把这些「只为调试器 / dotnet-dump 服务」的原生文件一起复制到输出目录
+    （运行时清单里标记为 DropFromSingleFile="true"），应用正常运行完全不需要：
+      mscordaccore*.dll / mscordbi.dll  调试与转储所需的 DAC / DBI
+      createdump.exe                    生成转储的辅助工具
+      Microsoft.DiaSymReader.Native.*   读取 PDB 符号
+    合计约 6 MB，这里从复制项里剔除，避免进入 MSIX。
+  -->
+  <Target Name="_RemoveRuntimeDiagnosticsFiles"
+          Condition="'$(Configuration)' != 'Debug'"
+          BeforeTargets="_CopyFilesMarkedCopyLocal;ComputeFilesToPublish">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
+                               Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+                             Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+      <RuntimePackAsset Remove="@(RuntimePackAsset)"
+                        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+    </ItemGroup>
+  </Target>
 </Project>
