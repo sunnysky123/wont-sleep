@@ -76,11 +76,11 @@ dotnet build wont-sleep.csproj -c Release -p:Platform=x64 `
   -p:GenerateAppxPackageOnBuild=true
 ```
 
-产物位于 `AppPackages\wont-sleep_1.0.3.0_x64_Test\`：
+产物位于 `AppPackages\wont-sleep_1.0.4.0_x64_Test\`：
 
 | 文件 | 说明 |
 | --- | --- |
-| `wont-sleep_1.0.3.0_x64.msix` | 应用包（未签名，用于上传商店） |
+| `wont-sleep_1.0.4.0_x64.msix` | 应用包（未签名，用于上传商店） |
 | `Install.ps1` / `Add-AppDevPackage.ps1` | 安装脚本（未签名包无法直接安装） |
 | `Dependencies\` | Windows App Runtime 依赖包 |
 
@@ -106,7 +106,7 @@ powershell -ExecutionPolicy Bypass -File Build-StoreBundle.ps1
 
 | 文件 | 说明 |
 | --- | --- |
-| `StorePackages\wont-sleep_1.0.3.0_x64_arm64.msixbundle` | 上传商店的包（未签名，约 22 MB） |
+| `StorePackages\wont-sleep_1.0.4.0_x64_arm64.msixbundle` | 上传商店的包（未签名，约 22 MB） |
 
 可选参数：
 
