@@ -3,7 +3,13 @@ bin/
 obj/
 AppPackages/
 BundleArtifacts/
+StorePackages/
 Generated Files/
+
+## 打包产物
+*.msix
+*.msixbundle
+*.msixupload
 
 ## Visual Studio / Rider
 .vs/

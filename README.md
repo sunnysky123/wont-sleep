@@ -43,8 +43,9 @@
 | 项目 | 要求 |
 | --- | --- |
 | 操作系统 | Windows 10 1809（10.0.17763）及以上 |
-| 运行时 | .NET 10（`net10.0-windows10.0.26100.0`） |
+| 运行时 | .NET 11（`net11.0-windows10.0.26100.0`） |
 | SDK | Windows App SDK 2.6.5 |
+| 支持架构 | x64、ARM64（不支持 x86） |
 | 打包方式 | 单项目 MSIX（带包标识，`Package.appxmanifest`） |
 
 ---
@@ -55,7 +56,7 @@
 # 还原依赖
 dotnet restore wont-sleep.csproj
 
-# 构建（可选 x86 / x64 / ARM64）
+# 构建（可选 x64 / ARM64）
 dotnet build wont-sleep.csproj -c Debug -p:Platform=x64
 
 # 运行（借助 Microsoft.Windows.SDK.BuildTools.WinApp 注册调试身份）
@@ -93,27 +94,36 @@ dotnet build wont-sleep.csproj -c Release -p:Platform=x64 `
 >
 > `.pfx` / `.cer` 已在 `.gitignore` 中排除，请勿把签名私钥提交到仓库。
 
-#### 多架构打包
+#### 多架构商店包（一条命令）
 
-每次打包都会先清空默认的输出目录，因此连续打多个架构会互相覆盖，需要用 `AppxPackageDir` 分目录：
-
-```powershell
-# x64
-dotnet build wont-sleep.csproj -c Release -p:Platform=x64 -p:AppxPackageDir="AppPackages\x64\" `
-  -p:GenerateAppxPackageOnBuild=true
-
-# ARM64（x64 主机上交叉编译即可）
-dotnet build wont-sleep.csproj -c Release -p:Platform=ARM64 -p:RuntimeIdentifier=win-arm64 `
-  -p:AppxPackageDir="AppPackages\arm64\" `
-  -p:GenerateAppxPackageOnBuild=true
-```
-
-把两个单架构 `.msix` 合并成一个多架构 bundle（上传商店只需一个文件，保持未签名）：
+上传商店用多架构 bundle，`Build-StoreBundle.ps1` 已经把完整流程脚本化：x64 / ARM64 各打一个 `.msix`，再用 `makeappx` 合并成一个未签名的 `.msixbundle`，统一输出到 `StorePackages\`。
 
 ```powershell
-$mk = "$env:USERPROFILE\.nuget\packages\microsoft.windows.sdk.buildtools\10.0.28000.2957\bin\10.0.28000.0\x64\makeappx.exe"
-& $mk bundle /d <存放两个 .msix 的目录> /p AppPackages\wont-sleep_1.0.3.0.msixbundle /o
+powershell -ExecutionPolicy Bypass -File Build-StoreBundle.ps1
 ```
+
+产物：
+
+| 文件 | 说明 |
+| --- | --- |
+| `StorePackages\wont-sleep_1.0.3.0_x64_arm64.msixbundle` | 上传商店的包（未签名，约 22 MB） |
+
+可选参数：
+
+```powershell
+# 只打单个架构（x64 或 ARM64）
+powershell -ExecutionPolicy Bypass -File Build-StoreBundle.ps1 -Platforms x64
+
+# 保留中间产物（StorePackages\_staging 下各架构 .msix），便于排查
+powershell -ExecutionPolicy Bypass -File Build-StoreBundle.ps1 -KeepStaging
+```
+
+脚本行为：
+
+- 版本号直接读取 `Package.appxmanifest` 的 `Identity/@Version`，bundle 与清单始终一致
+- 每个架构用独立的 `AppxPackageDir` 暂存，避免互相覆盖；中间目录默认在结束时删除
+- 只打包应用 `.msix`。`Dependencies\` 里是框架包，`makeappx bundle` 会报 `is not valid in the bundle because it's a framework package`
+- 强制 `AppxPackageSigningEnabled=false`，与商店入库时重新签名保持一致
 
 ### Native AOT 发布（可选）
 
@@ -195,6 +205,7 @@ wont-sleep/
 │  └─ en-US/Resources.resw         英文
 ├─ Assets/                         MSIX 图标、启动画面等
 │  └─ source/generate-icon.ps1     图标生成脚本（矢量绘制，睁眼 / 闭眼两套）
+├─ Build-StoreBundle.ps1           商店包脚本：多架构 .msix → StorePackages\*.msixbundle
 └─ Package.appxmanifest            MSIX 清单
 ```
 
