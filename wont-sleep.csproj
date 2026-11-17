@@ -96,8 +96,14 @@
       开启后需要 MSVC 链接器与 Windows SDK（Visual Studio「使用 C++ 的桌面开发」工作负载）。
       默认关闭可保证在未安装 C++ 工具链的机器上也能正常生成 MSIX / EXE。
     -->
+
+    <!--
+      ReadyToRun 默认关闭：自包含发布已经把整个 .NET 框架打进 MSIX，R2R 会把这些程序集
+      再预编译成本地代码（System.Private.CoreLib 从 2.8 MB 涨到 6.9 MB），压缩后每个架构
+      多出约 2.8 MB，x64 + ARM64 的 bundle 因此大 5.5 MB 左右，而启动收益很小。
+      需要时命令行覆盖：-p:PublishReadyToRun=true
+    -->
     <PublishReadyToRun Condition="'$(PublishAot)' == 'true'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(PublishReadyToRun)' == '' and '$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(PublishReadyToRun)' == ''">False</PublishReadyToRun>
 
     <!--
@@ -114,18 +120,20 @@
       mscordaccore*.dll / mscordbi.dll  调试与转储所需的 DAC / DBI
       createdump.exe                    生成转储的辅助工具
       Microsoft.DiaSymReader.Native.*   读取 PDB 符号
-    合计约 6 MB，这里从复制项里剔除，避免进入 MSIX。
+      clretwrc.dll                      运行时错误信息文本（ETW 事件字符串）
+      clrgcexp.dll                      GC 诊断实验模块
+    合计约 7 MB（x64），这里从复制项里剔除，避免进入 MSIX。
   -->
   <Target Name="_RemoveRuntimeDiagnosticsFiles"
           Condition="'$(Configuration)' != 'Debug'"
           BeforeTargets="_CopyFilesMarkedCopyLocal;ComputeFilesToPublish">
     <ItemGroup>
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
-                               Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+                               Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native|clretwrc|clrgcexp)'))" />
       <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
-                             Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+                             Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native|clretwrc|clrgcexp)'))" />
       <RuntimePackAsset Remove="@(RuntimePackAsset)"
-                        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native)'))" />
+                        Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '^(mscordaccore|mscordbi|createdump|Microsoft\.DiaSymReader\.Native|clretwrc|clrgcexp)'))" />
     </ItemGroup>
   </Target>
 </Project>
